@@ -42,13 +42,13 @@ export const PriceDisplay = ({
             <span className="text-muted-foreground text-sm font-medium tracking-wide">XAU / USD</span>
           </div>
           
-          <div className="flex items-center justify-center gap-4 flex-wrap">
-            <div className="number-highlight inline-block">
-              <h1 className="font-display text-6xl md:text-7xl font-bold gold-gradient-text tracking-tight">
-                ${price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-              </h1>
-            </div>
-            
+          <div className="number-highlight inline-block mb-4">
+            <h1 className="font-display text-6xl md:text-7xl font-bold gold-gradient-text tracking-tight">
+              ${price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </h1>
+          </div>
+          
+          <div className="flex items-center justify-center">
             <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-2xl backdrop-blur-sm ${
               isPositive 
                 ? 'bg-success/10 border border-success/20' 
@@ -81,14 +81,14 @@ export const PriceDisplay = ({
               <span className="text-muted-foreground text-sm font-medium tracking-wide">XAU / INR</span>
             </div>
             
-            <div className="flex items-center justify-center gap-4 flex-wrap">
-              <div className="number-highlight inline-block">
-                <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground/90 tracking-tight">
-                  ₹{inrPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </h2>
-              </div>
-              
-              {inrChange !== undefined && inrChangePercent !== undefined && (
+            <div className="number-highlight inline-block mb-3">
+              <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground/90 tracking-tight">
+                ₹{inrPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </h2>
+            </div>
+            
+            {inrChange !== undefined && inrChangePercent !== undefined && (
+              <div className="flex items-center justify-center">
                 <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl backdrop-blur-sm ${
                   isInrPositive 
                     ? 'bg-success/10 border border-success/15' 
@@ -103,8 +103,8 @@ export const PriceDisplay = ({
                     {isInrPositive ? '+' : ''}{inrChange.toFixed(2)} ({isInrPositive ? '+' : ''}{inrChangePercent.toFixed(2)}%)
                   </span>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         )}
         
