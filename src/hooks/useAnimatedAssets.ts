@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 
 const INITIAL_ASSETS = 1763000; // ₹17,63,000
 const MONTHLY_GROWTH_RATE = 0.15; // 15% per month
-const START_DATE = new Date('2025-01-01'); // Starting date for calculation
+const START_DATE = new Date(); // Starting from now
 
 // Calculate per-millisecond growth rate
 // (1 + 0.15)^(1/month_in_ms) - 1
