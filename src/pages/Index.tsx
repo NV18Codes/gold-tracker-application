@@ -14,12 +14,17 @@ const Index = () => {
   const { data: livePrice, isLoading, isError, refetch } = useGoldPrice();
   
   // Use live data if available, fallback to static data
-  const currentPrice = livePrice?.price ?? goldStats.currentPrice;
-  const change = livePrice?.change ?? goldStats.change;
-  const changePercent = livePrice?.changePercent ?? goldStats.changePercent;
-  const high24h = livePrice?.high ?? goldStats.high24h;
-  const low24h = livePrice?.low ?? goldStats.low24h;
-  const openPrice = livePrice?.open ?? goldStats.openPrice;
+  const currentPrice = livePrice?.usd?.price ?? goldStats.currentPrice;
+  const change = livePrice?.usd?.change ?? goldStats.change;
+  const changePercent = livePrice?.usd?.changePercent ?? goldStats.changePercent;
+  const high24h = livePrice?.usd?.high ?? goldStats.high24h;
+  const low24h = livePrice?.usd?.low ?? goldStats.low24h;
+  const openPrice = livePrice?.usd?.open ?? goldStats.openPrice;
+  
+  // INR data
+  const inrPrice = livePrice?.inr?.price;
+  const inrChange = livePrice?.inr?.change;
+  const inrChangePercent = livePrice?.inr?.changePercent;
 
   return (
     <div className="min-h-screen bg-background">
@@ -64,6 +69,9 @@ const Index = () => {
             price={currentPrice}
             change={change}
             changePercent={changePercent}
+            inrPrice={inrPrice}
+            inrChange={inrChange}
+            inrChangePercent={inrChangePercent}
           />
         </div>
 

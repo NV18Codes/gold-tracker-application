@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
-export interface GoldPriceData {
+export interface CurrencyPriceData {
   price: number;
   previousClose: number;
   open: number;
@@ -9,8 +9,12 @@ export interface GoldPriceData {
   low: number;
   change: number;
   changePercent: number;
+}
+
+export interface GoldPriceData {
+  usd: CurrencyPriceData;
+  inr: CurrencyPriceData | null;
   timestamp: number;
-  currency: string;
   metal: string;
 }
 

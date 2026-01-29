@@ -22,39 +22,62 @@ serve(async (req) => {
       )
     }
 
-    console.log('Fetching gold price from GoldAPI.io...')
+    console.log('Fetching gold prices from GoldAPI.io...')
     
-    const response = await fetch('https://www.goldapi.io/api/XAU/USD', {
-      headers: {
-        'x-access-token': apiKey,
-        'Content-Type': 'application/json'
-      }
-    })
+    // Fetch both USD and INR prices in parallel
+    const [usdResponse, inrResponse] = await Promise.all([
+      fetch('https://www.goldapi.io/api/XAU/USD', {
+        headers: { 'x-access-token': apiKey, 'Content-Type': 'application/json' }
+      }),
+      fetch('https://www.goldapi.io/api/XAU/INR', {
+        headers: { 'x-access-token': apiKey, 'Content-Type': 'application/json' }
+      })
+    ])
 
-    if (!response.ok) {
-      const errorText = await response.text()
-      console.error('GoldAPI error:', response.status, errorText)
+    if (!usdResponse.ok) {
+      const errorText = await usdResponse.text()
+      console.error('GoldAPI USD error:', usdResponse.status, errorText)
       return new Response(
-        JSON.stringify({ error: 'Failed to fetch gold price', details: errorText }),
-        { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: 'Failed to fetch USD gold price', details: errorText }),
+        { status: usdResponse.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
-    const data = await response.json()
-    console.log('Gold price fetched successfully:', data.price)
+    const usdData = await usdResponse.json()
+    let inrData = null
+    
+    if (inrResponse.ok) {
+      inrData = await inrResponse.json()
+      console.log('INR price fetched successfully:', inrData.price)
+    } else {
+      console.warn('Failed to fetch INR price, continuing with USD only')
+      await inrResponse.text() // consume response body
+    }
+
+    console.log('Gold prices fetched successfully - USD:', usdData.price, 'INR:', inrData?.price)
 
     // Transform the response to match our frontend expectations
     const result = {
-      price: data.price,
-      previousClose: data.prev_close_price,
-      open: data.open_price,
-      high: data.high_price,
-      low: data.low_price,
-      change: data.ch,
-      changePercent: data.chp,
-      timestamp: data.timestamp,
-      currency: data.currency,
-      metal: data.metal
+      usd: {
+        price: usdData.price,
+        previousClose: usdData.prev_close_price,
+        open: usdData.open_price,
+        high: usdData.high_price,
+        low: usdData.low_price,
+        change: usdData.ch,
+        changePercent: usdData.chp,
+      },
+      inr: inrData ? {
+        price: inrData.price,
+        previousClose: inrData.prev_close_price,
+        open: inrData.open_price,
+        high: inrData.high_price,
+        low: inrData.low_price,
+        change: inrData.ch,
+        changePercent: inrData.chp,
+      } : null,
+      timestamp: usdData.timestamp,
+      metal: usdData.metal
     }
 
     return new Response(
