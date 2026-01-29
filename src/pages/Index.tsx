@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TrendingUp, TrendingDown, BarChart3, DollarSign, Target, Gem, RefreshCw } from "lucide-react";
+import { TrendingUp, TrendingDown, BarChart3, DollarSign, Target, Gem, RefreshCw, Sparkles } from "lucide-react";
 import { PriceDisplay } from "@/components/PriceDisplay";
 import { StatCard } from "@/components/StatCard";
 import { GoldChart } from "@/components/GoldChart";
@@ -27,33 +27,48 @@ const Index = () => {
   const inrChangePercent = livePrice?.inr?.changePercent;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/3 rounded-full blur-[120px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-primary/2 rounded-full blur-[100px]" />
+      </div>
+
       {/* Header */}
-      <header className="border-b border-border/50 bg-card/30 backdrop-blur-xl sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
+      <header className="border-b border-border/30 bg-card/50 backdrop-blur-2xl sticky top-0 z-50 relative">
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+        <div className="container mx-auto px-4 py-5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-primary/10 pulse-gold">
-                <Gem className="w-6 h-6 text-primary" />
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-2xl bg-primary/10 pulse-gold relative">
+                <Gem className="w-7 h-7 text-primary icon-glow" />
+                <div className="absolute inset-0 rounded-2xl bg-primary/5 animate-ping" style={{ animationDuration: '3s' }} />
               </div>
               <div>
-                <h1 className="font-display text-xl font-bold gold-gradient-text">Digital Gold</h1>
-                <p className="text-muted-foreground text-xs">Rate Monitor</p>
+                <div className="flex items-center gap-2">
+                  <h1 className="font-display text-2xl font-bold gold-gradient-text">Digital Gold</h1>
+                  <Sparkles className="w-4 h-4 text-primary/50" />
+                </div>
+                <p className="text-muted-foreground/70 text-xs tracking-widest uppercase mt-0.5">Rate Monitor</p>
               </div>
             </div>
             
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <button 
                 onClick={() => refetch()} 
-                className="p-2 rounded-lg hover:bg-primary/10 transition-colors"
+                className="p-2.5 rounded-xl hover:bg-primary/10 transition-all duration-300 hover:scale-105 border border-transparent hover:border-primary/20"
                 title="Refresh price"
               >
-                <RefreshCw className={`w-4 h-4 text-muted-foreground ${isLoading ? 'animate-spin' : ''}`} />
+                <RefreshCw className={`w-5 h-5 text-muted-foreground hover:text-primary transition-colors ${isLoading ? 'animate-spin' : ''}`} />
               </button>
-              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-success/10">
+              <div className={`hidden md:flex items-center gap-2.5 px-4 py-2 rounded-2xl backdrop-blur-sm border ${
+                isError 
+                  ? 'bg-destructive/10 border-destructive/20' 
+                  : 'bg-success/10 border-success/20'
+              }`}>
                 <span className={`w-2 h-2 rounded-full ${isError ? 'bg-destructive' : 'bg-success'} animate-pulse`} />
                 <span className={`text-sm font-medium ${isError ? 'text-destructive' : 'text-success'}`}>
-                  {isLoading ? 'Loading...' : isError ? 'Offline' : 'Live'}
+                  {isLoading ? 'Syncing...' : isError ? 'Offline' : 'Live'}
                 </span>
               </div>
             </div>
@@ -62,9 +77,9 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-10 relative">
         {/* Price Display */}
-        <div className="mb-8">
+        <div className="mb-10">
           <PriceDisplay 
             price={currentPrice}
             change={change}
@@ -76,40 +91,44 @@ const Index = () => {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-10">
           <StatCard 
             title="24H High"
             value={`$${high24h.toLocaleString()}`}
             icon={TrendingUp}
             trend="up"
+            delay={100}
           />
           <StatCard 
             title="24H Low"
             value={`$${low24h.toLocaleString()}`}
             icon={TrendingDown}
             trend="down"
+            delay={150}
           />
           <StatCard 
             title="Open Price"
             value={`$${openPrice.toLocaleString()}`}
             icon={DollarSign}
+            delay={200}
           />
           <StatCard 
             title="All-Time High"
             value={`$${goldStats.allTimeHigh.toLocaleString()}`}
             subtitle="Dec 2024"
             icon={Target}
+            delay={250}
           />
         </div>
 
         {/* Chart Section */}
         <div className="grid lg:grid-cols-4 gap-6">
           <div className="lg:col-span-3">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
               <TimeframeSelector selected={timeframe} onSelect={setTimeframe} />
-              <div className="flex items-center gap-2 text-muted-foreground text-sm">
+              <div className="flex items-center gap-2 text-muted-foreground/70 text-sm px-4 py-2 rounded-xl bg-muted/30 border border-border/30">
                 <BarChart3 className="w-4 h-4" />
-                <span>Volume: {goldStats.volume}</span>
+                <span>Volume: <span className="text-foreground font-medium">{goldStats.volume}</span></span>
               </div>
             </div>
             <GoldChart data={chartData} timeframe={timeframe} />
@@ -121,10 +140,14 @@ const Index = () => {
         </div>
 
         {/* Footer Info */}
-        <div className="mt-8 text-center">
-          <p className="text-muted-foreground text-sm">
-            Data provided for informational purposes only. Not financial advice.
-          </p>
+        <div className="mt-12 text-center">
+          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-muted/20 border border-border/20">
+            <div className="w-1 h-1 rounded-full bg-primary/50" />
+            <p className="text-muted-foreground/60 text-sm">
+              Data provided for informational purposes only. Not financial advice.
+            </p>
+            <div className="w-1 h-1 rounded-full bg-primary/50" />
+          </div>
         </div>
       </main>
     </div>
