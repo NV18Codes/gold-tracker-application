@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { TrendingUp, TrendingDown, BarChart3, DollarSign, Target, Gem, RefreshCw, Sparkles, LogOut } from "lucide-react";
+import { TrendingUp, TrendingDown, BarChart3, DollarSign, Target, Gem, RefreshCw, Sparkles, LogOut, User } from "lucide-react";
 import { PriceDisplay } from "@/components/PriceDisplay";
 import { StatCard } from "@/components/StatCard";
 import { GoldChart } from "@/components/GoldChart";
@@ -14,7 +14,7 @@ const Index = () => {
   const [timeframe, setTimeframe] = useState('24H');
   const chartData = generateChartData(timeframe);
   const { data: livePrice, isLoading, isError, refetch } = useGoldPrice();
-  const { user, loading: authLoading, signOut } = useAuth();
+  const { user, profile, loading: authLoading, signOut } = useAuth();
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -83,6 +83,21 @@ const Index = () => {
             </div>
             
             <div className="flex items-center gap-3">
+              {/* User profile info */}
+              <div className="hidden md:flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-muted/30 border border-border/30">
+                <div className="p-1.5 rounded-lg bg-primary/10">
+                  <User className="w-4 h-4 text-primary" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium text-foreground">
+                    {profile?.full_name || 'User'}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {user?.email}
+                  </span>
+                </div>
+              </div>
+              
               <button 
                 onClick={() => refetch()} 
                 className="p-2.5 rounded-xl hover:bg-primary/10 transition-all duration-300 hover:scale-105 border border-transparent hover:border-primary/20"
