@@ -84,24 +84,17 @@ const Index = () => {
             
             <div className="flex items-center gap-3">
               {/* User profile info */}
-              <div className="hidden md:flex items-center gap-4 px-4 py-2 rounded-2xl bg-muted/30 border border-border/30">
-                <div className="flex items-center gap-2.5">
-                  <div className="p-1.5 rounded-lg bg-primary/10">
-                    <User className="w-4 h-4 text-primary" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium text-foreground">
-                      {profile?.full_name || 'User'}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      {user?.email}
-                    </span>
-                  </div>
+              <div className="hidden md:flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-muted/30 border border-border/30">
+                <div className="p-1.5 rounded-lg bg-primary/10">
+                  <User className="w-4 h-4 text-primary" />
                 </div>
-                <div className="h-8 w-px bg-border/50" />
                 <div className="flex flex-col">
-                  <span className="text-xs text-muted-foreground">Assets</span>
-                  <span className="text-sm font-semibold gold-gradient-text">₹17,63,000</span>
+                  <span className="text-sm font-medium text-foreground">
+                    {profile?.full_name || 'User'}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {user?.email}
+                  </span>
                 </div>
               </div>
               
@@ -137,7 +130,7 @@ const Index = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-10 relative">
         {/* Price Display */}
-        <div className="mb-10">
+        <div className="mb-6">
           <PriceDisplay 
             price={currentPrice}
             change={change}
@@ -146,6 +139,14 @@ const Index = () => {
             inrChange={inrChange}
             inrChangePercent={inrChangePercent}
           />
+        </div>
+
+        {/* Assets Card */}
+        <div className="mb-10 flex justify-center">
+          <div className="card-glass rounded-2xl px-8 py-5 inline-flex flex-col items-center gap-1">
+            <span className="text-sm text-muted-foreground tracking-wide">Assets</span>
+            <span className="text-2xl font-bold gold-gradient-text">₹17,63,000</span>
+          </div>
         </div>
 
         {/* Stats Grid */}
