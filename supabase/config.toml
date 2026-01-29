@@ -1,1 +1,4 @@
 project_id = "hdpyzfejijcknwrtlacc"
+
+[functions.gold-price]
+verify_jwt = false

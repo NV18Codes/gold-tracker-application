@@ -1,15 +1,25 @@
 import { useState } from "react";
-import { TrendingUp, TrendingDown, BarChart3, DollarSign, Target, Gem } from "lucide-react";
+import { TrendingUp, TrendingDown, BarChart3, DollarSign, Target, Gem, RefreshCw } from "lucide-react";
 import { PriceDisplay } from "@/components/PriceDisplay";
 import { StatCard } from "@/components/StatCard";
 import { GoldChart } from "@/components/GoldChart";
 import { TimeframeSelector } from "@/components/TimeframeSelector";
 import { MarketInfo } from "@/components/MarketInfo";
 import { generateChartData, goldStats } from "@/lib/goldData";
+import { useGoldPrice } from "@/hooks/useGoldPrice";
 
 const Index = () => {
   const [timeframe, setTimeframe] = useState('24H');
   const chartData = generateChartData(timeframe);
+  const { data: livePrice, isLoading, isError, refetch } = useGoldPrice();
+  
+  // Use live data if available, fallback to static data
+  const currentPrice = livePrice?.price ?? goldStats.currentPrice;
+  const change = livePrice?.change ?? goldStats.change;
+  const changePercent = livePrice?.changePercent ?? goldStats.changePercent;
+  const high24h = livePrice?.high ?? goldStats.high24h;
+  const low24h = livePrice?.low ?? goldStats.low24h;
+  const openPrice = livePrice?.open ?? goldStats.openPrice;
 
   return (
     <div className="min-h-screen bg-background">
@@ -28,9 +38,18 @@ const Index = () => {
             </div>
             
             <div className="flex items-center gap-4">
+              <button 
+                onClick={() => refetch()} 
+                className="p-2 rounded-lg hover:bg-primary/10 transition-colors"
+                title="Refresh price"
+              >
+                <RefreshCw className={`w-4 h-4 text-muted-foreground ${isLoading ? 'animate-spin' : ''}`} />
+              </button>
               <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-success/10">
-                <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
-                <span className="text-success text-sm font-medium">Live</span>
+                <span className={`w-2 h-2 rounded-full ${isError ? 'bg-destructive' : 'bg-success'} animate-pulse`} />
+                <span className={`text-sm font-medium ${isError ? 'text-destructive' : 'text-success'}`}>
+                  {isLoading ? 'Loading...' : isError ? 'Offline' : 'Live'}
+                </span>
               </div>
             </div>
           </div>
@@ -42,9 +61,9 @@ const Index = () => {
         {/* Price Display */}
         <div className="mb-8">
           <PriceDisplay 
-            price={goldStats.currentPrice}
-            change={goldStats.change}
-            changePercent={goldStats.changePercent}
+            price={currentPrice}
+            change={change}
+            changePercent={changePercent}
           />
         </div>
 
@@ -52,19 +71,19 @@ const Index = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <StatCard 
             title="24H High"
-            value={`$${goldStats.high24h.toLocaleString()}`}
+            value={`$${high24h.toLocaleString()}`}
             icon={TrendingUp}
             trend="up"
           />
           <StatCard 
             title="24H Low"
-            value={`$${goldStats.low24h.toLocaleString()}`}
+            value={`$${low24h.toLocaleString()}`}
             icon={TrendingDown}
             trend="down"
           />
           <StatCard 
             title="Open Price"
-            value={`$${goldStats.openPrice.toLocaleString()}`}
+            value={`$${openPrice.toLocaleString()}`}
             icon={DollarSign}
           />
           <StatCard 
