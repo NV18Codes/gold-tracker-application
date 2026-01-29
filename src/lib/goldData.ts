@@ -1,5 +1,12 @@
-// Simulated gold price data
+// Simulated gold price data with stable values (no random flickering)
+const chartDataCache: Record<string, { time: string; price: number }[]> = {};
+
 export const generateChartData = (timeframe: string) => {
+  // Return cached data if already generated
+  if (chartDataCache[timeframe]) {
+    return chartDataCache[timeframe];
+  }
+
   const basePrice = 2648.50;
   const volatility = timeframe === '1H' ? 5 : timeframe === '24H' ? 15 : timeframe === '7D' ? 40 : timeframe === '1M' ? 80 : 200;
   
@@ -13,10 +20,20 @@ export const generateChartData = (timeframe: string) => {
     '1Y': (i: number) => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i],
   };
 
-  return Array.from({ length: points }, (_, i) => ({
+  // Use seeded random based on index for consistent data
+  const seededRandom = (seed: number) => {
+    const x = Math.sin(seed * 9999) * 10000;
+    return x - Math.floor(x);
+  };
+
+  const data = Array.from({ length: points }, (_, i) => ({
     time: labels[timeframe as keyof typeof labels](i),
-    price: basePrice + (Math.sin(i * 0.5) * volatility) + (Math.random() - 0.5) * volatility * 0.5,
+    price: basePrice + (Math.sin(i * 0.5) * volatility) + (seededRandom(i + timeframe.length) - 0.5) * volatility * 0.5,
   }));
+
+  // Cache the result
+  chartDataCache[timeframe] = data;
+  return data;
 };
 
 export const goldStats = {
