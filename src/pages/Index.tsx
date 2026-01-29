@@ -84,17 +84,24 @@ const Index = () => {
             
             <div className="flex items-center gap-3">
               {/* User profile info */}
-              <div className="hidden md:flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-muted/30 border border-border/30">
-                <div className="p-1.5 rounded-lg bg-primary/10">
-                  <User className="w-4 h-4 text-primary" />
+              <div className="hidden md:flex items-center gap-4 px-4 py-2 rounded-2xl bg-muted/30 border border-border/30">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-1.5 rounded-lg bg-primary/10">
+                    <User className="w-4 h-4 text-primary" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-foreground">
+                      {profile?.full_name || 'User'}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {user?.email}
+                    </span>
+                  </div>
                 </div>
+                <div className="h-8 w-px bg-border/50" />
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium text-foreground">
-                    {profile?.full_name || 'User'}
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    {user?.email}
-                  </span>
+                  <span className="text-xs text-muted-foreground">Assets</span>
+                  <span className="text-sm font-semibold gold-gradient-text">₹17,63,000</span>
                 </div>
               </div>
               
