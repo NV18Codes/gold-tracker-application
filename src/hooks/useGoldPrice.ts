@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from './useAuth';
 
 export interface CurrencyPriceData {
   price: number;
@@ -30,9 +31,12 @@ async function fetchGoldPrice(): Promise<GoldPriceData> {
 }
 
 export function useGoldPrice() {
+  const { user } = useAuth();
+  
   return useQuery({
     queryKey: ['goldPrice'],
     queryFn: fetchGoldPrice,
+    enabled: !!user, // Only fetch when user is authenticated
     refetchInterval: 6 * 60 * 60 * 1000, // Refetch every 6 hours
     staleTime: 3 * 60 * 60 * 1000, // Consider data stale after 3 hours
     retry: 2,
