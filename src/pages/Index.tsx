@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { TrendingUp, TrendingDown, BarChart3, DollarSign, Target, Gem, RefreshCw, Sparkles } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { TrendingUp, TrendingDown, BarChart3, DollarSign, Target, Gem, RefreshCw, Sparkles, LogOut } from "lucide-react";
 import { PriceDisplay } from "@/components/PriceDisplay";
 import { StatCard } from "@/components/StatCard";
 import { GoldChart } from "@/components/GoldChart";
@@ -7,11 +8,20 @@ import { TimeframeSelector } from "@/components/TimeframeSelector";
 import { MarketInfo } from "@/components/MarketInfo";
 import { generateChartData, goldStats } from "@/lib/goldData";
 import { useGoldPrice } from "@/hooks/useGoldPrice";
+import { useAuth } from "@/hooks/useAuth";
 
 const Index = () => {
   const [timeframe, setTimeframe] = useState('24H');
   const chartData = generateChartData(timeframe);
   const { data: livePrice, isLoading, isError, refetch } = useGoldPrice();
+  const { user, loading: authLoading, signOut } = useAuth();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate('/auth');
+    }
+  }, [user, authLoading, navigate]);
   
   // Use live data if available, fallback to static data
   const currentPrice = livePrice?.usd?.price ?? goldStats.currentPrice;
@@ -25,6 +35,25 @@ const Index = () => {
   const inrPrice = livePrice?.inr?.price;
   const inrChange = livePrice?.inr?.change;
   const inrChangePercent = livePrice?.inr?.changePercent;
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/auth');
+  };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="p-4 rounded-2xl bg-primary/10 pulse-gold">
+          <Gem className="w-8 h-8 text-primary icon-glow animate-pulse" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
@@ -71,6 +100,13 @@ const Index = () => {
                   {isLoading ? 'Syncing...' : isError ? 'Offline' : 'Live'}
                 </span>
               </div>
+              <button 
+                onClick={handleSignOut} 
+                className="p-2.5 rounded-xl hover:bg-destructive/10 transition-all duration-300 hover:scale-105 border border-transparent hover:border-destructive/20"
+                title="Sign out"
+              >
+                <LogOut className="w-5 h-5 text-muted-foreground hover:text-destructive transition-colors" />
+              </button>
             </div>
           </div>
         </div>
