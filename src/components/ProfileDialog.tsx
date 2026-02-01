@@ -68,7 +68,7 @@ export function ProfileDialog() {
           </div>
           <div className="flex flex-col">
             <span className="text-sm font-medium text-foreground">
-              {profile?.full_name || 'Y Chandra Mohan Reddy'}
+              {profile?.full_name || 'Y Swarupa Rani '}
             </span>
             <span className="text-xs text-muted-foreground">
               {user?.email}
