@@ -5,12 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:chandru": "node -e \"require('fs').copyFileSync('.env.chandru', '.env')\" && vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "switch:chandru": "node -e \"require('fs').copyFileSync('.env.chandru', '.env')\"",
+    "switch:original": "node -e \"require('fs').copyFileSync('.env.original', '.env')\""
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
