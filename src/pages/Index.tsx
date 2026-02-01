@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { TrendingUp, TrendingDown, BarChart3, DollarSign, Target, Gem, RefreshCw, Sparkles, LogOut, User, Wallet } from "lucide-react";
+import { TrendingUp, TrendingDown, BarChart3, DollarSign, Target, Gem, RefreshCw, Sparkles, LogOut, Wallet } from "lucide-react";
 import { PriceDisplay } from "@/components/PriceDisplay";
 import { StatCard } from "@/components/StatCard";
 import { GoldChart } from "@/components/GoldChart";
 import { TimeframeSelector } from "@/components/TimeframeSelector";
 import { MarketInfo } from "@/components/MarketInfo";
+import { ProfileDialog } from "@/components/ProfileDialog";
 import { generateChartData, goldStats } from "@/lib/goldData";
 import { useGoldPrice } from "@/hooks/useGoldPrice";
 import { useAuth } from "@/hooks/useAuth";
@@ -86,19 +87,7 @@ const Index = () => {
             
             <div className="flex items-center gap-3">
               {/* User profile info */}
-              <div className="hidden md:flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-muted/30 border border-border/30">
-                <div className="p-1.5 rounded-lg bg-primary/10">
-                  <User className="w-4 h-4 text-primary" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium text-foreground">
-                    {profile?.full_name || 'User'}
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    {user?.email}
-                  </span>
-                </div>
-              </div>
+              <ProfileDialog />
               
               <button 
                 onClick={() => refetch()} 
