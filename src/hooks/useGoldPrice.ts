@@ -19,15 +19,22 @@ export interface GoldPriceData {
   metal: string;
 }
 
-async function fetchGoldPrice(): Promise<GoldPriceData> {
-  const { data, error } = await supabase.functions.invoke('gold-price');
-  
-  if (error) {
-    console.error('Error fetching gold price:', error);
-    throw new Error(error.message || 'Failed to fetch gold price');
+async function fetchGoldPrice(): Promise<GoldPriceData | null> {
+  try {
+    const { data, error } = await supabase.functions.invoke('gold-price');
+    
+    if (error) {
+      console.error('Error fetching gold price:', error);
+      // Return null instead of throwing to prevent error state
+      return null;
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('Failed to fetch gold price:', error);
+    // Return null to gracefully handle errors
+    return null;
   }
-  
-  return data;
 }
 
 export function useGoldPrice() {
@@ -39,6 +46,7 @@ export function useGoldPrice() {
     enabled: !!user, // Only fetch when user is authenticated
     refetchInterval: 6 * 60 * 60 * 1000, // Refetch every 6 hours
     staleTime: 3 * 60 * 60 * 1000, // Consider data stale after 3 hours
-    retry: 2,
+    retry: 1, // Retry once, then gracefully use fallback data
+    retryDelay: 2000, // Wait 2 seconds before retry
   });
 }

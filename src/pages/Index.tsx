@@ -103,7 +103,7 @@ const Index = () => {
               }`}>
                 <span className={`w-2 h-2 rounded-full ${isError ? 'bg-destructive' : 'bg-success'} animate-pulse`} />
                 <span className={`text-sm font-medium ${isError ? 'text-destructive' : 'text-success'}`}>
-                  {isLoading ? 'Syncing...' : isError ? 'Online' : 'Live'}
+                  {isLoading ? 'Syncing...' : isError ? 'Offline' : 'Live'}
                 </span>
               </div>
               <button 
