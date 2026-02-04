@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 
-const INITIAL_ASSETS = 1613000; // ₹17,24,000
+const INITIAL_ASSETS = 1008000; // ₹17,24,000
 const MONTHLY_GROWTH_RATE = 0.15; // 15% per month
 const START_DATE = new Date('2026-02-01T00:00:00'); // Fixed start date - Feb 1, 2026
 
